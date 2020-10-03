@@ -1,0 +1,13 @@
+pull_request_rules:
+  - name: automatic merge
+    conditions:
+      - "author=GuillaumeOj"
+      - "label!=work-in-progress"
+      - "label!=manual merge"
+      - "status-success=Travis CI - Branch"
+    actions:
+      merge:
+        strict: "smart"
+        method: rebase
+      delete_head_branch:
+        force: True
