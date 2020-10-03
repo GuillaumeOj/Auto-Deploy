@@ -5,6 +5,7 @@ pull_request_rules:
       - "label!=work-in-progress"
       - "label!=manual merge"
       - "status-success=Travis CI - Branch"
+      - "status-success=Travis CI - Pull Request"
     actions:
       merge:
         strict: "smart"
