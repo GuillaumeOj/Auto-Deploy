@@ -43,3 +43,8 @@ def landing():
     else:
         response = Response("Nothing here...", status=200)
     return response
+
+
+@app.route("/debug-sentry")
+def trigger_error():
+    return 1 / 0

@@ -14,6 +14,7 @@ gunicorn = "^20.0.4"
 isort = "^5.5.4"
 pytest = "^6.1.0"
 python-dotenv = "^0.14.0"
+sentry-sdk = {extras = ["flask"], version = "^0.18.0"}
 
 [tool.poetry.dev-dependencies]
 
