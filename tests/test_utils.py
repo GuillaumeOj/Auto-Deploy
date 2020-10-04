@@ -1,6 +1,8 @@
 import json
 import os
 
+from flask import Response
+
 from webhooks.utils import verify_signature
 
 
@@ -8,27 +10,39 @@ APP_DIR = os.path.dirname(os.path.abspath(__name__))
 
 
 class TestUtils:
-    event_file_path = os.path.join(APP_DIR, "tests", "events", "push_event.json")
+    data_path = os.path.join(APP_DIR, "tests", "events", "push_event.json")
 
-    with open(event_file_path, "r") as f:
+    with open(data_path, "r") as f:
         payload = json.load(f)
 
-    encoded_payload = json.dumps(payload, separators=(",", ":")).encode()
+    data = json.dumps(payload, separators=(",", ":")).encode()
 
-    def test_verify_signature_with_correct_payload(self, client):
-
+    def test_verify_signature(self, client):
         github_signature = "52d1787b7d4e01d53553b8ef058b86520ea07d28"
+        headers = {"X-Hub-Signature": f"sha1={github_signature}"}
 
-        assert verify_signature(github_signature, self.encoded_payload)
+        request = Response(
+            response=self.data, headers=headers, mimetype="application/json"
+        )
+
+        assert verify_signature(request)
 
     def test_verify_signature_with_wrong_signature(self, client):
         github_signature = "foo"
+        headers = {"X-Hub-Signature": f"sha1={github_signature}"}
 
-        assert not verify_signature(github_signature, self.encoded_payload)
+        request = Response(
+            response=self.data, headers=headers, mimetype="application/json"
+        )
+
+        assert not verify_signature(request)
 
     def test_verify_signature_with_wrong_payload(self, client):
-        encoded_payload = json.dumps({"foo": "bar"}, separators=(",", ":")).encode()
+        data = json.dumps({"foo": "bar"}, separators=(",", ":")).encode()
 
         github_signature = "52d1787b7d4e01d53553b8ef058b86520ea07d28"
+        headers = {"X-Hub-Signature": f"sha1={github_signature}"}
 
-        assert not verify_signature(github_signature, encoded_payload)
+        request = Response(response=data, headers=headers, mimetype="application/json")
+
+        assert not verify_signature(request)

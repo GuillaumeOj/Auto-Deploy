@@ -3,59 +3,30 @@ from flask import abort
 from flask import request
 
 from webhooks import app
+from webhooks.utils import NoSignature
+from webhooks.utils import WrongDigestMode
+from webhooks.utils import WrongSignatureType
 from webhooks.utils import verify_signature
-
-
-class WrongSignature(BaseException):
-    pass
-
-
-class WrongSignatureType(BaseException):
-    pass
-
-
-class NoSignature(BaseException):
-    pass
-
-
-class WrongDigestMode(BaseException):
-    pass
 
 
 @app.route("/", methods=["GET", "POST"])
 def landing():
     if request.method == "POST":
-        payload = request.data
-        headers = request.headers
 
         try:
-            if "X-Hub-Signature" in headers:
-                signature_header = headers["X-Hub-Signature"]
-                if "=" in signature_header:
-                    sha_name, received_signature = signature_header.split("=")
-                else:
-                    raise WrongSignatureType()
-            else:
-                raise NoSignature()
-
-            if sha_name != "sha1":
-                raise WrongDigestMode()
-
-            if verify_signature(received_signature, payload):
-                return Response("Everything is ok", status=200)
-            else:
-                raise WrongSignature()
+            if verify_signature(request):
+                Response("Everything is ok!", status=200)
         except NoSignature:
             abort(Response("The signature is missing", status=403))
         except WrongDigestMode:
             abort(Response("Only sha1 could be used", status=403))
-        except WrongSignature:
-            abort(
-                Response("The given signature don't match with the payload", status=403)
-            )
         except WrongSignatureType:
             abort(
                 Response("The given signature don't match the expected form", status=403)
+            )
+        else:
+            abort(
+                Response("The given signature don't match with the payload", status=403)
             )
 
     return "Nothing here..."
