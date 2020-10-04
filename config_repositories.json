@@ -2,7 +2,7 @@
   "repositories": [ 
     {
       "directory": "/home/foo/bar",
-      "name": "bar",
+      "name": "hello-world",
       "main_branch": "master",
       "django": true
     },

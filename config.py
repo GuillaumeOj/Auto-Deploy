@@ -28,10 +28,7 @@ class Config:
     )
 
     if ENV == "PRODUCTION":
-        try:
-            repositories_config_path = os.environ["REPOSITORIES_CONFIG"]
-        except KeyError:
-            raise MissingConfig("REPOSITORIES_CONFIG is missing.")
+        repositories_config_path = os.getenv("REPOSITORIES_CONFIG", default=CURRENT_DIR)
     else:
         repositories_config_path = os.path.join(CURRENT_DIR, "config_repositories.json")
 
