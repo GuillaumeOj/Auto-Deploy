@@ -33,11 +33,11 @@ then
 	exit 1
 fi
 
-if [ -e "poetry.lock" ]
+if [ -e "requirements.txt" ]
 then
-	dependencies_diff=$(git diff origin/$DEFAULT_BRANCH poetry.lock) 
+	dependencies_diff=$(git diff origin/$DEFAULT_BRANCH requirements.txt) 
 else
-	echo "$(date): lock file for dependencies is missing."
+	echo "$(date): requirements are missing."
 	exit 1
 fi
 
@@ -47,20 +47,24 @@ echo "$(date): Starting update"
 echo "$(date): Update the repository: $repository_name"
 echo "$(date): $(git pull --rebase)"
 
+echo "$(date): $(source $directory_path/venv/bin/activate)"
+
 if [ -n $dependencies_diff ]
 then
-	echo "$(date): $(poetry install)"
+	echo "$(date): $(pip install -U pip)"
+	echo "$(date): $(pip install -r requirements.txt)"
 fi
 
 if [ $application_type == "django" ]
 then
-	echo "$(date): $(poetry shell)"
 	echo "$(date): $(python manage.py migrate)"
 	echo "$(date): $(python manage.py collectstatic --noinput)"
-	echo "$(date): $(deactivate)"
 fi
 
 echo "$(date): $(supervisorctl restart $repository_name)"
 
+echo "$(date): $(deactivate)"
+
 echo "$(date): End of update"
 echo "==================================================================="
+exit 0
