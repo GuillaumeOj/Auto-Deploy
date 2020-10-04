@@ -4,6 +4,15 @@ class TestRoutes:
         assert response.status_code == 200
         assert response.data == b"Nothing here..."
 
+    def test_landing_page_with_post(self, client):
+        response = client.post(
+            "/",
+            headers={"X-Hub-Signature": "sha1=37b3c2f2ed573445f2de99a4140b0f23136f65e0"},
+            data={"foo": "bar"},
+        )
+        assert response.status_code == 200
+        assert response.data.decode("utf-8") == "Everything is ok!"
+
     def test_landing_page_with_no_signature(self, client):
         response = client.post("/", data={"foo": "bar"})
         assert response.status_code == 403

@@ -15,7 +15,7 @@ def landing():
 
         try:
             if verify_signature(request):
-                Response("Everything is ok!", status=200)
+                return Response("Everything is ok!", status=200)
         except NoSignature:
             abort(Response("The signature is missing", status=403))
         except WrongDigestMode:
