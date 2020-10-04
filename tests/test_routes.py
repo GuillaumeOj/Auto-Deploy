@@ -1,6 +1,3 @@
-from webhooks.routes import NoSignature
-
-
 class TestRoutes:
     def test_landing_page_with_get(self, client):
         response = client.get("/")
