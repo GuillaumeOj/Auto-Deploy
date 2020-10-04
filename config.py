@@ -21,6 +21,8 @@ class Config:
 
     ENV = os.getenv("ENV", default="DEVELOPMENT")
 
+    DEBUG = os.getenv("DEBUG", default=True)
+
     GIT_HUB_WEBHOOK_TOKEN = os.getenv(
         "GIT_HUB_WEBHOOK_TOKEN", default="This-is-a-dummy-token"
     )

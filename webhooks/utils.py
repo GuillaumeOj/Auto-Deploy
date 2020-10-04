@@ -36,4 +36,7 @@ def verify_signature(request):
 
     excepted_signature = HMAC(secret_key, payload, "sha1").hexdigest()
 
+    app.logger.info(received_signature)
+    app.logger.info(excepted_signature)
+
     return compare_digest(excepted_signature, received_signature)
