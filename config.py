@@ -28,16 +28,19 @@ class Config:
     )
 
     if ENV == "PRODUCTION":
-        repositories_config_path = os.getenv("REPOSITORIES_CONFIG", default=CURRENT_DIR)
-
         try:
-            with open(repositories_config_path, "r") as f:
-                REPOSITORIES_CONFIG = json.load(f)
-        except IsADirectoryError:
-            raise MissingConfig()
-        except FileNotFoundError:
-            raise WrongConfigFile()
+            repositories_config_path = os.environ["REPOSITORIES_CONFIG"]
+        except KeyError:
+            raise MissingConfig("REPOSITORIES_CONFIG is missing.")
     else:
-        REPOSITORIES_CONFIG = {}
+        repositories_config_path = os.path.join(CURRENT_DIR, "config_repositories.json")
+
+    try:
+        with open(repositories_config_path, "r") as f:
+            REPOSITORIES_CONFIG = json.load(f)
+    except IsADirectoryError:
+        raise MissingConfig("The given config directory is missing")
+    except FileNotFoundError:
+        raise WrongConfigFile("The given configuration file is missing")
 
     DEFAULT_BRANCH = os.getenv("DEFAULT_BRANCH", default="master")
