@@ -1,0 +1,14 @@
+{
+  "repositories": [ 
+    {
+      "directory": "/home/foo/bar",
+      "name": "bar",
+      "main_branch": "master",
+      "django": true
+    },
+    {
+      "directory": "/home/foo/bar2",
+      "name": "bar2"
+    }
+  ] 
+}
