@@ -1,11 +1,8 @@
-import subprocess
-
 from flask import Response
 from flask import abort
 from flask import request
 
 from webhooks import app
-from webhooks import hooks
 from webhooks.hooks.push_master import push_master
 from webhooks.utils import NoSignature
 from webhooks.utils import WrongDigestMode
@@ -43,8 +40,3 @@ def landing():
     else:
         response = Response("Nothing here...", status=200)
     return response
-
-
-@app.route("/debug-sentry")
-def trigger_error():
-    return 1 / 0
