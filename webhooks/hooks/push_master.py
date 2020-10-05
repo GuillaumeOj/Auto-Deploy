@@ -32,4 +32,5 @@ def push_master(request):
 
                 if local_repository.setdefault("django", False):
                     run_args.extend(["-t", "django"])
-                    subprocess.run(run_args, check=True)
+                    result = subprocess.run(run_args, check=True)
+                    app.logger.info(result)
