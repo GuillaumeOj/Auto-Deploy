@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "handle-github-webhooks"
+name = "auto-deploy"
 version = "0.1.0"
 description = "Simple project for handle github's webhooks on a server"
 authors = ["Guillaume <7831777+GuillaumeOj@users.noreply.github.com>"]
