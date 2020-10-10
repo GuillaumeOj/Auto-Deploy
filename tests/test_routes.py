@@ -28,10 +28,8 @@ class TestRoutes:
         assert response.data == b"Nothing here..."
 
     def test_landing_page_with_post(self, client, monkeypatch):
-        monkeypatch.setattr("subprocess.run", mock_subprocess_run)
-
         custom_payload = self.payload
-        custom_payload["ref"] = "refs/heads/master"
+        custom_payload["deleted"] = False
 
         custom_data = json.dumps(custom_payload, separators=(",", ":"))
 
@@ -39,7 +37,7 @@ class TestRoutes:
             "/",
             headers={
                 "X-GitHub-Event": "push",
-                "X-Hub-Signature": "sha1=8269e9712c991666e0a4f02f6c7fd95f08ef2eb1",
+                "X-Hub-Signature": "sha1=763068280f6b5cfe48da5cce7817a12b9986f11e",
             },
             data=custom_data,
             content_type="application/json",
@@ -85,7 +83,9 @@ class TestRoutes:
         assert response.status_code == 403
         assert response.data.decode("utf-8") == "Only sha1 could be used"
 
-    def test_landing_page_with_wrong_branch(self, client):
+    def test_landing_page_with_needed_update(self, client, monkeypatch):
+        monkeypatch.setattr("subprocess.run", mock_subprocess_run)
+
         response = client.post(
             "/",
             headers={
@@ -108,7 +108,7 @@ class TestRoutes:
             "/",
             headers={
                 "X-GitHub-Event": "push",
-                "X-Hub-Signature": "sha1=e141bd8ed6106fed6ec06965d26f6c391ac379ae",
+                "X-Hub-Signature": "sha1=833c39c6e060c33da56750ae465f388bed84f599",
             },
             data=custom_data,
             content_type="application/json",
