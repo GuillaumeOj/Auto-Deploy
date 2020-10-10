@@ -12,3 +12,10 @@
 Auto deploy is a microservice for receiving webhooks from GitHub and update your production on your server.
 
 It's more an exercice than a real project.
+
+# II. Tools
+
+This project use differents thirs party applications:
+
+- [Mergify](https://mergify.io) for merging my pull-requests
+- [Travis](https://travis-ci.com) for the continuous integration
